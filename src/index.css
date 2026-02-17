@@ -47,6 +47,10 @@
   --c-error: #f87171;
   --c-error-bg: rgba(248, 113, 113, 0.1);
 
+  /* Semantic Soft Colors */
+  --c-primary-soft: rgba(124, 92, 252, 0.1);
+  --c-success-soft: rgba(52, 211, 153, 0.1);
+
   /* Text */
   --c-text: #e8e8f0;
   --c-text-secondary: #9999b0;
@@ -385,6 +389,12 @@ select {
 .input:focus {
   border-color: var(--c-primary);
   box-shadow: 0 0 0 3px var(--c-primary-glow);
+}
+
+.input--sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  border-radius: var(--radius-sm);
 }
 
 .input::placeholder {

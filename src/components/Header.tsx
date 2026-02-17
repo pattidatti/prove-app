@@ -1,14 +1,17 @@
+import { useState } from 'react'
 import { useAuthContext } from '@/contexts/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function Header() {
     const { user, signOut } = useAuthContext()
+    const [isDyslexiaMode, setIsDyslexiaMode] = useState(() => localStorage.getItem('dyslexia-mode') === '1')
     const navigate = useNavigate()
 
     const handleDyslexiaToggle = () => {
         document.body.classList.toggle('dyslexia-mode')
         const active = document.body.classList.contains('dyslexia-mode')
         localStorage.setItem('dyslexia-mode', active ? '1' : '0')
+        setIsDyslexiaMode(active)
     }
 
     return (
@@ -20,11 +23,15 @@ export default function Header() {
 
             <div className="app-header__actions">
                 <button
-                    className="btn btn--secondary btn--sm dyslexia-toggle"
+                    className={`btn btn--secondary btn--sm dyslexia-toggle ${isDyslexiaMode ? 'active' : ''}`}
                     onClick={handleDyslexiaToggle}
                     title="Veksle dysleksivennlig skrift"
                     id="dyslexia-toggle"
-                    style={{ gap: 'var(--space-1)' }}
+                    style={{
+                        gap: 'var(--space-1)',
+                        borderColor: isDyslexiaMode ? 'var(--c-primary)' : 'var(--c-border)',
+                        background: isDyslexiaMode ? 'var(--c-primary-glow)' : 'var(--c-surface-elevated)'
+                    }}
                 >
                     <span style={{ fontSize: '1.2em' }}>Aa</span>
                     <span className="hide-mobile">Dysleksi</span>

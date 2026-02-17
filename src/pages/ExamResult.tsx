@@ -86,7 +86,22 @@ export default function ExamResult() {
                         return (
                             <div key={q.id} className="card card--static answer-card">
                                 <div className="answer-card-header">
-                                    <h3>Oppgave {idx + 1}</h3>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                        <h3>Oppgave {idx + 1}</h3>
+                                        <button
+                                            className="btn btn--ghost btn--sm"
+                                            onClick={() => {
+                                                const text = `${q.questionText}. Ditt svar var: ${answer?.studentAnswer || '(Ikke besvart)'}. ${answer?.aiFeedback ? 'Tilbakemelding: ' + answer.aiFeedback : ''}`
+                                                const utterance = new SpeechSynthesisUtterance(text)
+                                                utterance.lang = 'nb-NO'
+                                                window.speechSynthesis.speak(utterance)
+                                            }}
+                                            title="Les opp"
+                                            style={{ padding: '0 var(--space-2)', minWidth: 'auto' }}
+                                        >
+                                            🔊
+                                        </button>
+                                    </div>
                                     {session.status === 'graded' && answer && (
                                         <div className="points-badge">
                                             {answer.points ?? 0} / {q.maxPoints} poeng

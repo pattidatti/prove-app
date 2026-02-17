@@ -9,7 +9,6 @@ import {
     where,
     onSnapshot,
     serverTimestamp,
-    type Unsubscribe
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import type { Exam } from '@/types/exam'

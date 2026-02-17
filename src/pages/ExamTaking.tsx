@@ -133,9 +133,21 @@ export default function ExamTaking() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)', marginTop: 'var(--space-8)' }}>
                 {questions.map((q, idx) => (
                     <div key={q.id} className="card card--static">
-                        <h3 style={{ marginBottom: 'var(--space-4)', display: 'flex', gap: 'var(--space-3)' }}>
+                        <h3 style={{ marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
                             <span style={{ color: 'var(--c-primary-text)' }}>{idx + 1}.</span>
-                            {q.questionText}
+                            <span style={{ flex: 1 }}>{q.questionText}</span>
+                            <button
+                                className="btn btn--secondary btn--sm"
+                                onClick={() => {
+                                    const utterance = new SpeechSynthesisUtterance(q.questionText)
+                                    utterance.lang = 'nb-NO'
+                                    window.speechSynthesis.speak(utterance)
+                                }}
+                                title="Les opp oppgave"
+                                style={{ borderRadius: 'var(--radius-full)', padding: 'var(--space-2)' }}
+                            >
+                                🔊
+                            </button>
                         </h3>
 
                         {q.type === 'mc' ? (
