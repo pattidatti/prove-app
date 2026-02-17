@@ -54,7 +54,10 @@ export interface ExamSession {
     startedAt: Date
     submittedAt?: Date
     status: SessionStatus
-    /** Overall grade 1-6 */
+    /** Overall grade 1-6 or descriptive */
+    grade?: string
+    feedback?: string
+    /** Numeric total for internal calculation */
     totalGrade?: number
 }
 
@@ -66,7 +69,8 @@ export interface Answer {
     sessionId: string
     questionId: string
     studentAnswer: string
-    /** Grade 1-6 */
+    points?: number
+    /** Grade 1-6 if applicable per question */
     grade?: number
     aiFeedback?: string
     gradingStatus: GradingStatus

@@ -10,6 +10,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'OpenDyslexic';
   src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
@@ -145,6 +146,7 @@ a {
   text-decoration: none;
   transition: color var(--transition-fast);
 }
+
 a:hover {
   color: var(--c-primary);
 }
@@ -162,7 +164,9 @@ button {
   color: inherit;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -237,6 +241,43 @@ input, textarea, select {
   transform: translateY(-1px);
 }
 
+/* Submissions Table */
+.submissions-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.submissions-table th,
+.submissions-table td {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.submissions-table th {
+  background: var(--c-surface-elevated);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-text-muted);
+}
+
+.submissions-table tr:hover td {
+  background: var(--c-surface-elevated);
+}
+
+.back-link {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+  text-decoration: none;
+  margin-bottom: var(--space-2);
+}
+
+.back-link:hover {
+  color: var(--c-primary);
+}
+
 .card--static:hover {
   border-color: var(--c-border);
   box-shadow: none;
@@ -263,6 +304,7 @@ input, textarea, select {
   color: #fff;
   box-shadow: 0 0 0 0 var(--c-primary-glow);
 }
+
 .btn--primary:hover {
   background: var(--c-primary-hover);
   box-shadow: var(--shadow-glow);
@@ -274,6 +316,7 @@ input, textarea, select {
   color: var(--c-text);
   border: 1px solid var(--c-border);
 }
+
 .btn--secondary:hover {
   background: var(--c-surface-hover);
   border-color: var(--c-primary);
@@ -283,6 +326,7 @@ input, textarea, select {
   background: transparent;
   color: var(--c-text-secondary);
 }
+
 .btn--ghost:hover {
   color: var(--c-text);
   background: var(--c-surface-elevated);
@@ -292,6 +336,7 @@ input, textarea, select {
   background: var(--c-error);
   color: #fff;
 }
+
 .btn--danger:hover {
   background: #e85d5d;
 }
@@ -367,14 +412,17 @@ textarea.input {
   background: var(--c-success-bg);
   color: var(--c-success);
 }
+
 .badge--warning {
   background: var(--c-warning-bg);
   color: var(--c-warning);
 }
+
 .badge--error {
   background: var(--c-error-bg);
   color: var(--c-error);
 }
+
 .badge--neutral {
   background: var(--c-surface-elevated);
   color: var(--c-text-secondary);
@@ -420,6 +468,7 @@ textarea.input {
   font-size: var(--fs-sm);
   margin: var(--space-4) 0;
 }
+
 .auth-divider::before,
 .auth-divider::after {
   content: '';
@@ -449,7 +498,9 @@ textarea.input {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* --- Dashboard --- */

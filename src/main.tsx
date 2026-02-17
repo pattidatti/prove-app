@@ -7,7 +7,11 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import Home from '@/pages/Home'
 import TeacherLogin from '@/pages/TeacherLogin'
 import TeacherDashboard from '@/pages/TeacherDashboard'
+import ExamEditor from '@/pages/ExamEditor'
 import StudentJoin from '@/pages/StudentJoin'
+import ExamTaking from '@/pages/ExamTaking'
+import ExamSubmissions from '@/pages/ExamSubmissions'
+import StudentGrading from '@/pages/StudentGrading'
 import './index.css'
 
 // Restore dyslexia mode from localStorage
@@ -39,7 +43,46 @@ const router = createBrowserRouter([
                     </ProtectedRoute>
                 ),
             },
-            // Fase 2+3: Exam editor and exam-taking routes will be added here
+            {
+                path: '/laerer/ny',
+                element: (
+                    <ProtectedRoute role="teacher">
+                        <ExamEditor />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: '/laerer/rediger/:id',
+                element: (
+                    <ProtectedRoute role="teacher">
+                        <ExamEditor />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: '/prove/:code',
+                element: (
+                    <ProtectedRoute role="student">
+                        <ExamTaking />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: '/laerer/besvarelser/:id',
+                element: (
+                    <ProtectedRoute role="teacher">
+                        <ExamSubmissions />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: '/laerer/retting/:examId/:sessionId',
+                element: (
+                    <ProtectedRoute role="teacher">
+                        <StudentGrading />
+                    </ProtectedRoute>
+                ),
+            },
         ],
     },
 ])

@@ -4,6 +4,8 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signInAnonymously,
+    signInWithPopup,
+    GoogleAuthProvider,
     signOut as firebaseSignOut,
     updateProfile,
     type User,
@@ -98,6 +100,20 @@ export function useAuth() {
         }
     }, [])
 
+    const signInWithGoogle = useCallback(async () => {
+        setState((s) => ({ ...s, loading: true, error: null }))
+        try {
+            const provider = new GoogleAuthProvider()
+            await signInWithPopup(auth, provider)
+        } catch (err) {
+            setState((s) => ({
+                ...s,
+                loading: false,
+                error: err instanceof Error ? err.message : 'Google-pålogging feilet',
+            }))
+        }
+    }, [])
+
     const signOut = useCallback(async () => {
         await firebaseSignOut(auth)
     }, [])
@@ -107,6 +123,7 @@ export function useAuth() {
         signInTeacher,
         registerTeacher,
         signInStudent,
+        signInWithGoogle,
         signOut,
     }
 }

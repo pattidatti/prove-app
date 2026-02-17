@@ -11,6 +11,12 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
+const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'your-api-key'
+
+if (!isConfigValid) {
+    console.error('Firebase config is missing or invalid. Please check your .env file.')
+}
+
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 export const db = getFirestore(app)

@@ -11,6 +11,7 @@ interface AuthContextType {
     signInTeacher: (email: string, password: string) => Promise<void>
     registerTeacher: (email: string, password: string, name: string) => Promise<void>
     signInStudent: (name: string) => Promise<void>
+    signInWithGoogle: () => Promise<void>
     signOut: () => Promise<void>
 }
 

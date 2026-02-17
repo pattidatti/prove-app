@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Prøver (Exams)
+    // Elever må kunne lese detaljer for å ta prøven, men bare lærere kan skape/endre.
+    match /exams/{examId} {
+      allow read: if true; 
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (resource == null || resource.data.teacherId == request.auth.uid);
+    }
+
+    // Sesjoner (Sessions)
+    // En sesjon kobler en anonym bruker (elev) til en prøve.
+    match /sessions/{sessionId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth != null && (
+        // Eleven som eier sesjonen
+        request.auth.uid == resource.data.anonymousUid ||
+        // Læreren som eier prøven koblet til sesjonen
+        get(/databases/$(database)/documents/exams/$(resource.data.examId)).data.teacherId == request.auth.uid
+      );
+    }
+
+    // Svar (Answers)
+    // Svarene er knyttet til en sesjon.
+    match /answers/{answerId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth != null && (
+        // Sjekk om brukeren eier sesjonen gjennom en fetch (get)
+        get(/databases/$(database)/documents/sessions/$(resource.data.sessionId || request.resource.data.sessionId)).data.anonymousUid == request.auth.uid ||
+        // Eller om læreren eier prøven
+        get(/databases/$(database)/documents/exams/$(get(/databases/$(database)/documents/sessions/$(resource.data.sessionId)).data.examId)).data.teacherId == request.auth.uid
+      );
+    }
+  }
+}
