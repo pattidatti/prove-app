@@ -20,12 +20,14 @@ export default function Header() {
 
             <div className="app-header__actions">
                 <button
-                    className="btn btn--ghost btn--sm"
+                    className="btn btn--secondary btn--sm dyslexia-toggle"
                     onClick={handleDyslexiaToggle}
-                    title="Dysleksivennlig skrift"
+                    title="Veksle dysleksivennlig skrift"
                     id="dyslexia-toggle"
+                    style={{ gap: 'var(--space-1)' }}
                 >
-                    Aa
+                    <span style={{ fontSize: '1.2em' }}>Aa</span>
+                    <span className="hide-mobile">Dysleksi</span>
                 </button>
 
                 {user && (

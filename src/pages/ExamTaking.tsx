@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useExamSession } from '@/hooks/useExamSession'
 import { useQuestions } from '@/hooks/useQuestions'
@@ -13,13 +13,20 @@ export default function ExamTaking() {
 
     const [localAnswers, setLocalAnswers] = useState<Record<string, string>>({})
     const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved')
+    const [submitting, setSubmitting] = useState(false)
 
     // 1. Join exam on mount
     useEffect(() => {
-        if (code && user?.displayName) {
-            joinExam(code, user.displayName).catch(() => { })
+        if (code && user) {
+            joinExam(code, user.displayName)
         }
-    }, [code, user, joinExam])
+    }, [code, user])
+
+    useEffect(() => {
+        if (session?.status === 'submitted' || session?.status === 'graded') {
+            navigate(`/prove/${code}/result`)
+        }
+    }, [session?.status, code, navigate])
 
     // 2. Subscribe to questions once exam is loaded
     useEffect(() => {
@@ -31,34 +38,41 @@ export default function ExamTaking() {
         setLocalAnswers(answers)
     }, [answers])
 
-    // 4. Debounced save
-    const debouncedSave = useCallback((qId: string, text: string) => {
-        if (!session?.id) return
-        setSaveStatus('saving')
+    // 4. Debounced save logic via Effect
+    useEffect(() => {
+        const lastChangedQId = Object.keys(localAnswers).find(id => localAnswers[id] !== answers[id])
+        if (!lastChangedQId || !session?.id) return
 
-        const timeout = setTimeout(async () => {
+        setSaveStatus('saving')
+        const timer = setTimeout(async () => {
             try {
-                await saveAnswer(session.id, qId, text)
+                await saveAnswer(session.id, lastChangedQId, localAnswers[lastChangedQId])
                 setSaveStatus('saved')
             } catch (err) {
                 setSaveStatus('error')
             }
         }, 1000)
 
-        return () => clearTimeout(timeout)
-    }, [session?.id, saveAnswer])
+        return () => clearTimeout(timer)
+    }, [localAnswers, session?.id, saveAnswer, answers])
 
     const handleAnswerChange = (qId: string, text: string) => {
         setLocalAnswers(prev => ({ ...prev, [qId]: text }))
-        debouncedSave(qId, text)
     }
 
     const handleSubmit = async () => {
-        if (!session?.id) return
-        if (confirm('Er du sikker på at du vil levere prøven? Du kan ikke endre svarene etterpå.')) {
+        if (!session) return
+        if (!confirm('Er du sikker på at du vil levere prøven? Du kan ikke endre svarene etterpå.')) {
+            return
+        }
+        setSubmitting(true)
+        try {
             await submitExam(session.id)
-            alert('Prøven er levert!')
-            navigate('/')
+            navigate(`/prove/${code}/result`)
+        } catch (err) {
+            alert('Kunne ikke levere prøven. Prøv igjen.')
+        } finally {
+            setSubmitting(false)
         }
     }
 
@@ -106,7 +120,13 @@ export default function ExamTaking() {
                             )}
                         </div>
                     </div>
-                    <button className="btn btn--primary btn--lg" onClick={handleSubmit}>Lever prøve</button>
+                    <button
+                        className="btn btn--primary btn--lg"
+                        onClick={handleSubmit}
+                        disabled={submitting}
+                    >
+                        {submitting ? 'Leverer...' : 'Lever prøve'}
+                    </button>
                 </div>
             </div>
 

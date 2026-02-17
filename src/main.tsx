@@ -12,6 +12,7 @@ import StudentJoin from '@/pages/StudentJoin'
 import ExamTaking from '@/pages/ExamTaking'
 import ExamSubmissions from '@/pages/ExamSubmissions'
 import StudentGrading from '@/pages/StudentGrading'
+import ExamResult from '@/pages/ExamResult'
 import './index.css'
 
 // Restore dyslexia mode from localStorage
@@ -64,6 +65,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute role="student">
                         <ExamTaking />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: '/prove/:code/result',
+                element: (
+                    <ProtectedRoute role="student">
+                        <ExamResult />
                     </ProtectedRoute>
                 ),
             },

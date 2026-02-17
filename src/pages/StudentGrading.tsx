@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useGrading } from '@/hooks/useGrading'
 import { useQuestions } from '@/hooks/useQuestions'
+import { useGemini } from '@/hooks/useGemini'
 import type { Answer } from '@/types/exam'
 
 export default function StudentGrading() {
@@ -9,12 +10,38 @@ export default function StudentGrading() {
     const navigate = useNavigate()
     const { sessions, getSessionAnswers, updateAnswerGrade, updateSessionGrade } = useGrading(examId)
     const { questions, subscribeToQuestions } = useQuestions(examId)
+    const { gradeAnswer, loading: aiLoading } = useGemini()
 
     const [sessionAnswers, setSessionAnswers] = useState<Answer[]>([])
     const [loading, setLoading] = useState(true)
     const [grade, setGrade] = useState('')
     const [feedback, setFeedback] = useState('')
     const [saving, setSaving] = useState(false)
+
+    const handleAIGrade = async (qId: string, answer: Answer | undefined) => {
+        const question = questions.find(q => q.id === qId)
+        if (!question || !answer) return
+
+        try {
+            const result = await gradeAnswer(
+                question.questionText,
+                question.correctAnswer,
+                answer.studentAnswer || '',
+                question.maxPoints
+            )
+
+            await updateAnswerGrade(answer.id, {
+                points: result.points,
+                aiFeedback: result.feedback
+            })
+
+            setSessionAnswers(prev => prev.map(a =>
+                a.id === answer.id ? { ...a, points: result.points, aiFeedback: result.feedback } : a
+            ))
+        } catch (err) {
+            alert('AI-retting feilet. Sjekk API-nøkkelen din.')
+        }
+    }
 
     const session = sessions.find(s => s.id === sessionId)
 
@@ -91,8 +118,26 @@ export default function StudentGrading() {
                                     <div style={{ whiteSpace: 'pre-wrap' }}>{answer?.studentAnswer || '(Intet svar)'}</div>
                                 </div>
 
-                                <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--c-text-muted)' }}>Fasit / Stikkord:</div>
-                                <div style={{ fontSize: 'var(--fs-sm)', opacity: 0.8 }}>{q.correctAnswer}</div>
+                                {answer?.aiFeedback && (
+                                    <div style={{ padding: 'var(--space-4)', background: 'var(--c-primary-soft)', borderLeft: '4px solid var(--c-primary)', borderRadius: 'var(--radius-sm)', marginBottom: 'var(--space-4)', fontSize: 'var(--fs-sm)' }}>
+                                        <div style={{ fontWeight: 600, marginBottom: 'var(--space-1)' }}>🤖 AI Forslag:</div>
+                                        {answer.aiFeedback}
+                                    </div>
+                                )}
+
+                                <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--c-text-muted)' }}>Fasit / Stikkord:</div>
+                                        <div style={{ fontSize: 'var(--fs-sm)', opacity: 0.8 }}>{q.correctAnswer}</div>
+                                    </div>
+                                    <button
+                                        className="btn btn--secondary btn--sm"
+                                        onClick={() => handleAIGrade(q.id, answer)}
+                                        disabled={aiLoading || !answer}
+                                    >
+                                        {aiLoading ? 'Tenker...' : 'Rett oppgave med AI'}
+                                    </button>
+                                </div>
                             </div>
                         )
                     })}
@@ -123,9 +168,15 @@ export default function StudentGrading() {
                         <button
                             className="btn btn--secondary btn--lg"
                             style={{ width: '100%', marginTop: 'var(--space-4)' }}
-                            onClick={() => alert('AI-retting kommer snart som del av Fase 4!')}
+                            onClick={async () => {
+                                for (const q of questions) {
+                                    const answer = sessionAnswers.find(a => a.questionId === q.id)
+                                    if (answer) await handleAIGrade(q.id, answer)
+                                }
+                            }}
+                            disabled={aiLoading}
                         >
-                            🤖 Foreslå med AI (Gemini)
+                            {aiLoading ? 'Retter alle...' : '🤖 Rett hele prøven med AI'}
                         </button>
                     </div>
                 </div>

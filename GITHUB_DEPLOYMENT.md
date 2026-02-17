@@ -10,6 +10,7 @@ Siden vi bruker GitHub Actions for å sende nettsiden til GitHub Pages, må GitH
 - `VITE_FIREBASE_STORAGE_BUCKET`
 - `VITE_FIREBASE_MESSAGING_SENDER_ID`
 - `VITE_FIREBASE_APP_ID`
+- `VITE_GEMINI_API_KEY`
 
 ### 2. Legg dem til i GitHub
 1. Gå til ditt repository på GitHub.com.

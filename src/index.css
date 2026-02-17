@@ -578,6 +578,17 @@ textarea.input {
   margin-bottom: var(--space-6);
 }
 
+/* --- Utils --- */
+.hide-mobile {
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   :root {
@@ -602,4 +613,109 @@ textarea.input {
     align-items: flex-start;
     gap: var(--space-4);
   }
+}
+
+/* Result Page Styles */
+.result-page {
+  max-width: 900px;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.result-header .lead {
+  font-size: var(--fs-lg);
+  color: var(--c-text-secondary);
+  margin-top: var(--space-2);
+}
+
+.grade-box {
+  margin-top: var(--space-8);
+  border: 2px solid var(--c-primary);
+  background: var(--c-primary-glow);
+  padding: var(--space-10);
+}
+
+.grade-label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-primary-text);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.grade-value {
+  font-size: 5rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: var(--space-4);
+  text-shadow: 0 0 20px var(--c-primary-glow);
+}
+
+.feedback-text {
+  text-align: left;
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--space-6);
+  line-height: 1.6;
+  color: var(--c-text-secondary);
+}
+
+.answer-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.points-badge {
+  background: var(--c-surface-elevated);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--c-primary-text);
+}
+
+.question-text {
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  font-size: var(--fs-lg);
+}
+
+.student-answer-box,
+.ai-feedback-box {
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
+}
+
+.student-answer-box {
+  background: var(--c-surface-elevated);
+  border: 1px solid var(--c-border);
+}
+
+.ai-feedback-box {
+  background: var(--c-primary-glow);
+  border-left: 4px solid var(--c-primary);
+}
+
+.box-label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.text-content {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.answer-card {
+  margin-bottom: var(--space-8);
 }
